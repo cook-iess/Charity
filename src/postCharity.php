@@ -7,7 +7,7 @@ if (isset($_POST["submit"])) {
 
     $campaignTitle = $_POST['campaignTitle'];
     $campaignDesc = $_POST['campaignDesc'];
-    $organizationId = $_POST['orgName']; // Assume this is the organization's ID from a dropdown
+    $organizationId = $_POST['orgName'];
     $targetGoal = $_POST['targetGoal'];
     $challenges = $_POST['challenges'];
     $solutions = $_POST['solutions'];
@@ -59,7 +59,7 @@ if (isset($_POST["submit"])) {
         $result = mysqli_query($con, $insert);
 
         if ($result) {
-            header("Location: postCharity.php?submission=success");
+            header("Location: findex.php?submission=success");
             exit();
         } else {
             header("Location: postCharity.php?error=failed");
@@ -98,7 +98,10 @@ if (isset($_POST["submit"])) {
             </div>
             <div class="mb-4">
                 <label for="orgName" class="block text-sm font-medium text-gray-700">Organization Name *</label>
-                <input type="text" id="orgName" name="orgName" placeholder="Enter organization name" class="mt-1 border rounded-md p-2 w-full focus:ring focus:ring-blue-300" required />
+                <input type="text" id="orgName" name="orgName" placeholder="Enter organization name" class="mt-1 border rounded-md p-2 w-full focus:ring focus:ring-blue-300" required required value="<?php
+                                                                                                                                            if (isset($_GET['orgName'])) {
+                                                                                                                                                echo $_GET['orgName'];
+                                                                                                                                            } ?>" readonly/>
             </div>
             <div class="mb-4">
                 <label for="targetGoal" class="block text-sm font-medium text-gray-700">Target Goal (Birr) *</label>

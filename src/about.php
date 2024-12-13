@@ -30,12 +30,12 @@ if (isset($_SESSION['Username']) && isset($_COOKIE['Username'])) {
         <div class="space-y-16 text-gray-700">
             <!-- History -->
             <div class="px-8 pb-10 flex flex-col lg:flex-row text-left gap-8 justify-center items-start pl-14 text-sky-950 pt-28">
-                <div class="lg:w-1/2 px-5">
-                    <p class="text-5xl font-sans font-bold text-left text-sky-700 pb-10">
+                <div class="lg:w-1/2 md:px-5">
+                    <p class="md:text-5xl text-xl font-sans font-bold text-left text-sky-700 md:pb-10">
                         About Us
                     </p>
-                    <hr class="border-0 h-px bg-sky-800 w-36 mb-10" />
-                    <p class="text-lg leading-relaxed">
+                    <hr class="border-0 h-px bg-sky-800 w-36 md:mb-10 mb-6" />
+                    <p class="md:text-lg leading-relaxed">
                         <b class="text-sky-700">Bright Futures </b>was founded with the
                         mission to support communities and provide educational resources to
                         those in need. Since our inception, we have mobilized countless
@@ -44,7 +44,7 @@ if (isset($_SESSION['Username']) && isset($_COOKIE['Username'])) {
                         underserved areas, ensuring that children have access to quality
                         education and a safe learning environment.
                     </p>
-                    <p class="text-lg leading-relaxed pt-4">
+                    <p class="md:text-lg leading-relaxed pt-4">
                         Our programs are designed not only to educate but also to empower
                         individuals and families. We offer workshops that teach essential
                         skills, mentorship programs that guide youth toward their goals, and
@@ -64,9 +64,9 @@ if (isset($_SESSION['Username']) && isset($_COOKIE['Username'])) {
                 <div class="absolute inset-0 bg-cover bg-center py-20" style="background-image: url('./img/img7.jpg');"></div>
                 <div class="absolute inset-0 bg-white opacity-65"></div>
 
-                <div class="relative flex justify-around p-8 rounded-lg py-20">
+                <div class="relative md:flex md:space-y-0 space-y-10 justify-around p-8 rounded-lg py-20">
                     <div class="text-center">
-                        <div class="flex items-center justify-center">
+                        <div class="md:flex items-center justify-center">
                             <span id="counter1" class="text-3xl font-bold">0</span>
                             <span class="ml-1"><i class="fas fa-plus"></i></span>
                         </div>
@@ -175,66 +175,34 @@ if (isset($_SESSION['Username']) && isset($_COOKIE['Username'])) {
 
 
         <!-- footer -->
-        <div
-            class="bg-blue-600 text-white pt-3 pb-6 flex flex-col items-center">
-            <div>
-                <!-- Logo and Title -->
+        <div class="bg-blue-600 text-white pt-3 pb-6 md:flex md:items-center">
+            <div class="container mx-auto px-4">
                 <div class="flex justify-center items-center pt-0 mt-0">
-                    <img src="./img/logo.png" alt="Logo" class="w-24" />
-                    <h2 class="text-white font-bold text-xl">Bright Futures</h2>
+                    <img src="./img/logo.png" alt="Logo" class="md:w-24 w-10" />
+                    <h2 class="text-white font-bold md:text-xl">Bright Futures</h2>
                 </div>
 
-                <!-- Main Content Area -->
-                <div class="flex flex-1 justify-between w-full mb-16">
-                    <div class="w-1/3 mr-4 mx-auto text-center">
-                        <h4 class="text-xl font-bold pb-1">Navigation</h4>
-                        <a href="/" class="text-white hover:underline block">
-                            Home
-                        </a>
-                        <a
-                            href="/projects"
-                            class="text-white hover:underline block">
-                            Our Projects
-                        </a>
-                        <a
-                            href="/about"
-                            class="text-white hover:underline block">
-                            About Us
-                        </a>
-                        <a
-                            href="/about#contact-us"
-                            class="text-white hover:underline block">
-                            Contact Us
-                        </a>
+                <div class="flex flex-col md:flex-row justify-between w-full mb-16">
+                    <div class="w-full md:w-1/3 mb-4 md:mb-0 text-center">
+                        <h4 class="md:text-xl font-bold pb-1">Navigation</h4>
+                        <a href="/" class="text-white hover:underline block">Home</a>
+                        <a href="/projects" class="text-white hover:underline block">Our Projects</a>
+                        <a href="/about" class="text-white hover:underline block">About Us</a>
+                        <a href="/about#contact-us" class="text-white hover:underline block">Contact Us</a>
                     </div>
 
-                    <div class="text-center w-1/3">
-                        <h4 class="text-xl font-bold pb-2">Get Involved</h4>
-                        <p class="">
-                            Join us in our mission to support the community.
-                            <b>Together, we can make a difference!</b>
-                        </p>
-                        <a href="/about" class="hover:underline text-white">
-                            Learn More
-                        </a>
+                    <div class="w-full md:w-1/3 mb-4 md:mb-0 text-center">
+                        <h4 class="md:text-xl font-bold pb-2">Get Involved</h4>
+                        <p>Join us in our mission to support the community. <b>Together, we can make a difference!</b></p>
+                        <a href="/about" class="hover:underline text-white">Learn More</a>
                     </div>
 
-                    <div class="w-1/3 text-center">
+                    <div class="w-full md:w-1/3 text-center">
                         <h4 class="text-xl font-bold pb-2">Contact Us</h4>
-                        <p>
-                            <b>Email:</b>
-                            <a href="mailto:info@brightfutures.org" class="underline">
-                                info@brightfutures.org
-                            </a>
-                        </p>
-                        <p>
-                            <b>Phone:</b>
-                            <a href="tel:+1234567890" class="underline">
-                                +1 (234) 567-890
-                            </a>
-                        </p>
+                        <p><b>Email:</b> <a href="mailto:info@brightfutures.org" class="underline">info@brightfutures.org</a></p>
+                        <p><b>Phone:</b> <a href="tel:+1234567890" class="underline">+1 (234) 567-890</a></p>
                         <p><b>Address:</b> 123 Bright St, City, State, ZIP</p>
-                        <div class="flex justify-center">
+                        <div class="flex justify-center mt-2">
                             <a href="https://facebook.com" class="flex items-center justify-center p-2 text-white">
                                 <i class="fab fa-facebook-f text-2xl hover:text-3xl duration-500"></i>
                             </a>
@@ -251,9 +219,7 @@ if (isset($_SESSION['Username']) && isset($_COOKIE['Username'])) {
                 <div class="my-3 bg-white h-px mb-6"></div>
 
                 <div class="text-center mb-4">
-                    <p>
-                        © <?php echo date('Y'); ?> Bright Futures. All rights reserved.
-                    </p>
+                    <p>© <?php echo date('Y'); ?> Bright Futures. All rights reserved.</p>
                 </div>
             </div>
         </div>

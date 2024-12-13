@@ -22,7 +22,7 @@ if (isset($_POST["login"])) {
                 $_SESSION['orgName'] = $result['orgName'];
                 setcookie('orgName', $orgName, time() + 3600);
 
-                header("Location: postCharity.php?&login=success");
+                header("Location: findex.php?&login=success");
                 exit();
             } else {
                 header("Location: fLogin.php?error=incorrect&orgName=" . $orgName);

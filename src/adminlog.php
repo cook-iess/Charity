@@ -18,59 +18,15 @@ if (isset($_POST["login"])) {
             if ($password = 'Admin321') {
 
                 session_start();
-                $_SESSION['Username'] = $result['username'];
+                $_SESSION['Username'] = 'Admin';
                 setcookie('Username', $username, time() + 3600);
 
                 header("Location: adminHome.php?&login=success");
                 exit();
-            } else {
-                header("Location: login.php?error=incorrect&username=" . $username);
-                exit();
             }
         } else {
-            $sql = "SELECT * FROM `User` WHERE `username` = '$username'";
-            $rs = mysqli_query($con, $sql);
-            $result = mysqli_fetch_assoc($rs);
-            $count = mysqli_num_rows($rs);
-
-            if ($count > 0) {
-
-                if ($test = password_verify($password, $result['password'])) {
-
-                    session_start();
-                    $_SESSION['Username'] = $result['username'];
-                    $userId = $_SESSION['Username'];
-
-                    // Check if this is the user's first login
-                    $firstLoginQuery = "SELECT first_login FROM User WHERE username = '$userId'";
-                    $firstLoginResult = mysqli_query($con, $firstLoginQuery);
-                    $user = mysqli_fetch_assoc($firstLoginResult);
-
-                    if ($user && $user['first_login'] == 1) {
-                        // Reward the user
-                        $rewardAmount = 500000;
-                        $updateBalanceQuery = "UPDATE User SET balance = balance + $rewardAmount, first_login = 0 WHERE username = '$userId'";
-                        mysqli_query($con, $updateBalanceQuery);
-
-                        // Add notification
-                        $notificationMessage = "You have received a reward of 500,000 Birr!";
-                        $notificationQuery = "INSERT INTO Notifications (username, message) VALUES ('$userId', '$notificationMessage')";
-                        mysqli_query($con, $notificationQuery);
-                    }
-
-
-                    setcookie('Username', $username, time() + 3600);
-
-                    header("Location: index.php?&login=success");
-                    exit();
-                } else {
-                    header("Location: login.php?error=incorrect&username=" . $username);
-                    exit();
-                }
-            } else {
-                header("Location: login.php?error=signup");
-                exit();
-            }
+            header("Location: login.php?error=signup");
+            exit();
         }
     } else {
         header("Location: login.php?error=emptyfields&username=" . $username);
@@ -105,7 +61,7 @@ if (isset($_POST["login"])) {
             <h1 class="font-serif font-bold text-sky-800 text-3xl">Bright Futures</h1>
         </div>
 
-        <p class="text-xl -mt-1 font-bold text-sky-800 font-serif text-center">Welcome</p>
+        <p class="text-xl -mt-1 font-bold text-sky-800 font-serif text-center">Admin Login</p>
         <div class="mt-10 w-[70%] mx-auto">
             <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                 <input type="text" id="Username" name="UserName" placeholder="Username *" class="border rounded p-2 w-full" required value="<?php
@@ -145,13 +101,6 @@ if (isset($_POST["login"])) {
                 <input value="Login" type="submit" name="login" class="bg-blue-500 text-white p-3 rounded-lg w-full mt-4">
             </form>
         </div>
-        <p class="font-extralight text-center mt-4 w-[75%] mx-auto">
-            Don't have an account?
-            <a href="/Charity/src/signup.php" class="text-blue-600 ml-1">Sign Up</a>
-        </p>
-        <p class="font-extralight text-center w-[75%] mx-auto mt-2">
-            <a href="/Charity/src/flogin.php" class="text-blue-600 ml-1">Fundraiser?</a>
-        </p>
     </div>
     <div class="relative w-1/2 h-screen bg-cover">
         <div class="absolute inset-0 bg-black opacity-10 flex items-center justify-center text-white text-3xl"></div>

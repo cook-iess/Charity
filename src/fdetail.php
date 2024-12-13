@@ -64,9 +64,9 @@ if ($campaign) {
 
             <!-- Campaign Details -->
             <div class="bg-white rounded-lg shadow-lg p-10 mb-6">
-            <p class="text-sm text-gray-500 mb-2">
-                Posted at: <?php echo $campaign['created_at']; ?>
-            </p>
+                <p class="text-sm text-gray-500 mb-2">
+                    Posted at: <?php echo $campaign['created_at']; ?>
+                </p>
                 <h2 class="md:text-3xl text-xl font-semibold text-gray-700 underline mb-1">Campaign Description</h2>
                 <p class="text-gray-800 mt-2"><?php echo htmlspecialchars($campaign['campDesc']); ?></p>
                 <p class="text-gray-800 mt-2">
@@ -80,7 +80,7 @@ if ($campaign) {
             <h2 class="text-lg pl-2 font-bold mt-14 mb-1 text-gray-700 italic">About the NGO</h2>
             <div class="bg-white rounded-lg shadow-lg p-10 ml-1">
                 <div class="flex items-center">
-                    <img src="<?php echo htmlspecialchars($organization['logo']); ?>" alt="Logo" class="md:h-12 md:w-12 w-6 mr-4"> 
+                    <img src="<?php echo htmlspecialchars($organization['logo']); ?>" alt="Logo" class="md:h-12 md:w-12 w-6 mr-4">
                     <h3 class="md:text-xl font-semibold text-gray-700"><?php echo htmlspecialchars($organization['orgName']); ?></h3>
                 </div>
                 <p class="text-gray-700 mt-4"><?php echo htmlspecialchars($organization['orgDesc']); ?></p>
@@ -92,60 +92,55 @@ if ($campaign) {
             </div>
         </div>
 
+        <?php
+        // Assuming $campaignId is defined and holds the ID of the current campaign
+        $donationQuery = "SELECT SUM(amount) AS total_donated, GROUP_CONCAT(username SEPARATOR ', ') AS username FROM donations WHERE campId = '$campaignId'";
+        $donationResult = mysqli_query($con, $donationQuery);
+        $donationData = mysqli_fetch_assoc($donationResult);
+
+        $totalDonated = $donationData['total_donated'] ?? 0;
+        $donorNames = $donationData['username'] ?? 'No donors yet';
+
+        $donationQuery = "SELECT username, amount FROM donations WHERE campId = '$campaignId'";
+$donationResult = mysqli_query($con, $donationQuery);
+        ?>
+
         <!-- Right Fixed Sidebar -->
         <div class="md:w-1/4 p-4 bg-white shadow-lg md:ml-4 md:h-screen md:fixed right-0 top-0">
             <h2 class="text-xl font-bold mb-4">Donate Now</h2>
+
             <div class="bg-gray-200 rounded-full h-2 md:mb-4">
                 <?php
-                // Calculate the percentage
+                // Calculate the donation progress percentage
                 $percentage = ($campaign['targetGoal'] > 0)
                     ? min(100, ($campaign['achievedGoal'] / $campaign['targetGoal']) * 100)
                     : 0;
                 ?>
                 <div class="bg-blue-600 h-2" style="width: <?php echo $percentage; ?>%;"></div>
             </div>
+
             <p class="text-sm text-gray-500 mb-2">
-                Amount Raised: <?php echo number_format($campaign['achievedGoal']); ?> birr
+                Amount Raised: <?php echo number_format($totalDonated); ?> birr
             </p>
             <p class="text-sm text-gray-500 mb-4">
                 Target Goal: <?php echo number_format($campaign['targetGoal']); ?> birr
             </p>
-            <div class="flex flex-col space-y-2 mb-6">
-                <div class="flex flex-col space-y-2 mb-6">
-                    <a href="donate.php?id=<?php echo $campaignId; ?>&amount=1000" class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Donate 1,000 birr</a>
-                    <a href="donate.php?id=<?php echo $campaignId; ?>&amount=5000" class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Donate 5,000 birr</a>
-                    <a href="donate.php?id=<?php echo $campaignId; ?>&amount=10000" class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Donate 10,000 birr</a>
-                    <a href="donate.php?id=<?php echo $campaignId; ?>" class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Custom Amount</a>
-                </div>
-            </div>
 
-            <div class="mb-4">
-                <h3 class="text-lg font-semibold mb-2">Why Donate?</h3>
-                <ul class="list-disc list-inside text-sm text-gray-600">
-                    <li><i class="fas fa-heart mr-2 text-red-600"></i>Your contribution helps those in need.</li>
-                    <li><i class="fas fa-hand-holding-heart mr-2 text-yellow-500"></i>Support our community initiatives.</li>
-                    <li><i class="fas fa-chart-line mr-2 text-green-700"></i>Be part of our growth and success.</li>
-                </ul>
-            </div>
-
-            <p class="text-sm text-gray-600 mb-4">
-                Your support makes a difference! Every contribution helps us reach our goals.
-            </p>
-            <p class="text-sm text-gray-600 mb-4">
-                Thank you for considering a donation. Together, we can make a positive impact!
-            </p>
-
-            <div class="flex flex-col space-y-2">
-                <a href="#contact" class="flex items-center text-gray-600 hover:text-blue-600">
-                    <i class="fas fa-envelope mr-2"></i>Contact Us
-                </a>
-                <a href="#about" class="flex items-center text-gray-600 hover:text-blue-600">
-                    <i class="fas fa-info-circle mr-2"></i>About Us
-                </a>
-                <a href="#updates" class="flex items-center text-gray-600 hover:text-blue-600">
-                    <i class="fas fa-newspaper mr-2"></i>Latest Updates
-                </a>
-            </div>
+            <h3 class="text-lg font-bold mb-2">Donors:</h3>
+            <ul class="text-sm text-gray-600">
+                <?php
+                // Fetch donation details
+                if (mysqli_num_rows($donationResult) > 0) {
+                    while ($donationData = mysqli_fetch_assoc($donationResult)) {
+                        $username = htmlspecialchars($donationData['username']);
+                        $amount = number_format($donationData['amount']);
+                        echo "<li class='mb-1'><span class='font-semibold'>$username</span>: $amount birr</li>";
+                    }
+                } else {
+                    echo "<li>No donors yet</li>";
+                }
+                ?>
+            </ul>
         </div>
     </div>
 

@@ -23,7 +23,7 @@ if (isset($_SESSION['Username']) && isset($_COOKIE['Username'])) {
 <body>
 
   <div class="text-white">
-    <div class="md:grid grid-cols-2 my-auto w-full md:mt-0 mt-28 bg-sky-50 pt-20">
+    <div class="md:grid grid-cols-2 my-auto w-full md:mt-0 bg-sky-50 pt-20">
       <div class="my-auto md:ml-14 ml-6 px-3 md:mb-auto mb-36 mr-10 pb-24 pt-20">
         <p class="font-extrabold text-6xl text-gray-800 text-left mb-4">
           Together, We Can Make a Difference
@@ -45,7 +45,7 @@ if (isset($_SESSION['Username']) && isset($_COOKIE['Username'])) {
         </div>
       </div>
     </div>
-    <div class="flex w-[100%]">
+    <div class="md:flex w-[100%]">
       <div class="bg-green-600 w-full text-left p-6 py-auto pt-16">
         <img src="./img/icons/icon1.png" alt="" class="w-10">
         <p class="text-lg font-semibold pt-2 pb-2">
@@ -68,11 +68,11 @@ if (isset($_SESSION['Username']) && isset($_COOKIE['Username'])) {
         <p class="font-extralight text-sm">Donate Now</p>
       </div>
     </div>
-    <div class="grid grid-cols-7 w-full text-black pt-20 pb-6">
+    <div class="grid md:grid-cols-7 w-full text-black pt-20 pb-6">
       <div class="col-span-1"></div>
-      <div class="col-span-3 my-auto">
+      <div class="col-span-3 my-auto mx-auto">
         <p class="font-serif font-bold text-2xl pb-3">Our Mission</p>
-        <p class="pr-20">
+        <p class="md:pr-20">
           Our mission is to bring lasting change by empowering individuals and
           communities to overcome poverty, access quality education,
           healthcare, and resources.
@@ -82,18 +82,18 @@ if (isset($_SESSION['Username']) && isset($_COOKIE['Username'])) {
       <div class="col-span-1"></div>
     </div>
 
-    <div class="grid grid-cols-7 w-full text-black pt-16 mb-24">
-      <div class="col-span-1"></div>
+    <div class="grid md:grid-cols-7 w-full text-black pt-16 mb-24 md:px-0 md:pb-0 bg-red-600">
+      <div class="md:col-span-1"></div>
       <img src="./img/img2.jpeg" alt="" class="h-48 rounded-xl col-span-2" />
-      <div class="col-span-3 my-auto">
-        <p class="font-serif font-bold text-2xl pb-3">Our vision</p>
-        <p class="pr-20">
+      <div class="col-span-3 my-auto mx-auto">
+        <p class="font-serif font-bold text-2xl pb-3 md:text-left text-right">Our vision</p>
+        <p class="md:pr-20 md:text-left text-right">
           We envision a world where every person has the opportunity to live a
           life of dignity, purpose, and hope. Through collaborative efforts,
           sustainable programs, and unwavering support.
         </p>
       </div>
-      <div class="col-span-1"></div>
+      <div class="md:col-span-1"></div>
     </div>
 
     <div>
@@ -109,88 +109,56 @@ if (isset($_SESSION['Username']) && isset($_COOKIE['Username'])) {
 
 
   <!-- footer -->
-  <div
-    class="bg-blue-600 text-white pt-3 pb-6 flex flex-col items-center">
-    <div>
-      <!-- Logo and Title -->
-      <div class="flex justify-center items-center pt-0 mt-0">
-        <img src="./img/logo.png" alt="Logo" class="w-24" />
-        <h2 class="text-white font-bold text-xl">Bright Futures</h2>
-      </div>
-
-      <!-- Main Content Area -->
-      <div class="flex flex-1 justify-between w-full mb-16">
-        <div class="w-1/3 mr-4 mx-auto text-center">
-          <h4 class="text-xl font-bold pb-1">Navigation</h4>
-          <a href="/" class="text-white hover:underline block">
-            Home
-          </a>
-          <a
-            href="/projects"
-            class="text-white hover:underline block">
-            Our Projects
-          </a>
-          <a
-            href="/about"
-            class="text-white hover:underline block">
-            About Us
-          </a>
-          <a
-            href="/about#contact-us"
-            class="text-white hover:underline block">
-            Contact Us
-          </a>
+  <div class="bg-blue-600 text-white pt-3 pb-6 md:flex md:items-center">
+    <div class="container mx-auto px-4">
+        <!-- Logo and Title -->
+        <div class="flex justify-center items-center pt-0 mt-0">
+            <img src="./img/logo.png" alt="Logo" class="md:w-24 w-10" />
+            <h2 class="text-white font-bold md:text-xl">Bright Futures</h2>
         </div>
 
-        <div class="text-center w-1/3">
-          <h4 class="text-xl font-bold pb-2">Get Involved</h4>
-          <p class="">
-            Join us in our mission to support the community.
-            <b>Together, we can make a difference!</b>
-          </p>
-          <a href="/about" class="hover:underline text-white">
-            Learn More
-          </a>
+        <!-- Main Content Area -->
+        <div class="flex flex-col md:flex-row justify-between w-full mb-16">
+            <div class="w-full md:w-1/3 mb-4 md:mb-0 text-center">
+                <h4 class="md:text-xl font-bold pb-1">Navigation</h4>
+                <a href="/" class="text-white hover:underline block">Home</a>
+                <a href="/projects" class="text-white hover:underline block">Our Projects</a>
+                <a href="/about" class="text-white hover:underline block">About Us</a>
+                <a href="/about#contact-us" class="text-white hover:underline block">Contact Us</a>
+            </div>
+
+            <div class="w-full md:w-1/3 mb-4 md:mb-0 text-center">
+                <h4 class="md:text-xl font-bold pb-2">Get Involved</h4>
+                <p>Join us in our mission to support the community. <b>Together, we can make a difference!</b></p>
+                <a href="/about" class="hover:underline text-white">Learn More</a>
+            </div>
+
+            <div class="w-full md:w-1/3 text-center">
+                <h4 class="text-xl font-bold pb-2">Contact Us</h4>
+                <p><b>Email:</b> <a href="mailto:info@brightfutures.org" class="underline">info@brightfutures.org</a></p>
+                <p><b>Phone:</b> <a href="tel:+1234567890" class="underline">+1 (234) 567-890</a></p>
+                <p><b>Address:</b> 123 Bright St, City, State, ZIP</p>
+                <div class="flex justify-center mt-2">
+                    <a href="https://facebook.com" class="flex items-center justify-center p-2 text-white">
+                        <i class="fab fa-facebook-f text-2xl hover:text-3xl duration-500"></i>
+                    </a>
+                    <a href="https://twitter.com" class="flex items-center justify-center p-2 text-white">
+                        <i class="fab fa-twitter text-2xl hover:text-3xl duration-500"></i>
+                    </a>
+                    <a href="https://instagram.com" class="flex items-center justify-center p-2 text-white">
+                        <i class="fab fa-instagram text-2xl hover:text-3xl duration-300"></i>
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <div class="w-1/3 text-center">
-          <h4 class="text-xl font-bold pb-2">Contact Us</h4>
-          <p>
-            <b>Email:</b>
-            <a href="mailto:info@brightfutures.org" class="underline">
-              info@brightfutures.org
-            </a>
-          </p>
-          <p>
-            <b>Phone:</b>
-            <a href="tel:+1234567890" class="underline">
-              +1 (234) 567-890
-            </a>
-          </p>
-          <p><b>Address:</b> 123 Bright St, City, State, ZIP</p>
-          <div class="flex justify-center">
-            <a href="https://facebook.com" class="flex items-center justify-center p-2 text-white">
-              <i class="fab fa-facebook-f text-2xl hover:text-3xl duration-500"></i>
-            </a>
-            <a href="https://twitter.com" class="flex items-center justify-center p-2 text-white">
-              <i class="fab fa-twitter text-2xl hover:text-3xl duration-500"></i>
-            </a>
-            <a href="https://instagram.com" class="flex items-center justify-center p-2 text-white">
-              <i class="fab fa-instagram text-2xl hover:text-3xl duration-300"></i>
-            </a>
-          </div>
+        <div class="my-3 bg-white h-px mb-6"></div>
+
+        <div class="text-center mb-4">
+            <p>© <?php echo date('Y'); ?> Bright Futures. All rights reserved.</p>
         </div>
-      </div>
-
-      <div class="my-3 bg-white h-px mb-6"></div>
-
-      <div class="text-center mb-4">
-        <p>
-          © <?php echo date('Y'); ?> Bright Futures. All rights reserved.
-        </p>
-      </div>
     </div>
-  </div>
+</div>
 
   <script>
     const header = document.getElementById('header');
