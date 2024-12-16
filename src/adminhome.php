@@ -4,27 +4,38 @@ session_start();
 include("conn.php"); // Include your database connection
 
 // Query to get counts for Users, Organizations, Charities, and Donations
-$userCountQuery = "SELECT COUNT(*) as count FROM User"; // Adjust table name
-$organizationCountQuery = "SELECT COUNT(*) as count FROM Organization"; // Adjust table name
-$charityCountQuery = "SELECT COUNT(*) as count FROM Charity"; // Adjust table name
-$donationTotalQuery = "SELECT SUM(amount) as total FROM Donations"; // Adjust table name
+$userCountQuery = "SELECT COUNT(*) as count FROM User"; 
+$organizationCountQuery = "SELECT COUNT(*) as count FROM Organization"; 
+$charityCountQuery = "SELECT COUNT(*) as count FROM Charity"; 
+$donationTotalQuery = "SELECT SUM(amount) as total FROM Donations"; 
 
 // New queries for detailed reports
 $topDonorsQuery = "SELECT username, SUM(amount) as total_donated 
                    FROM Donations 
                    GROUP BY username 
                    ORDER BY total_donated DESC 
-                   LIMIT 5"; // Top 5 donors
+                   LIMIT 5"; 
 
-$donationsByOrganizationQuery = "SELECT orgName AS organization_name, SUM(d.amount) AS total_donated 
-                                  FROM Donations d 
-                                  JOIN Organization o ON d.campId = o.id 
-                                  GROUP BY orgName"; // Total donations by organization
+$donationsByCharityQuery = "SELECT c.campTitle AS charity_title, SUM(d.amount) AS total_donated 
+                             FROM Donations d 
+                             JOIN Charity c ON d.campId = c.id 
+                             GROUP BY c.campTitle"; 
 
-$donationsOverTimeQuery = "SELECT DATE(created_at) as donation_date, SUM(amount) as total_donated 
-                            FROM Donations 
+$donationsOverTimeQuery = "SELECT DATE(d.donatedAt) as donation_date, SUM(d.amount) as total_donated 
+                            FROM Donations d 
                             GROUP BY donation_date 
-                            ORDER BY donation_date"; // Donations over time
+                            ORDER BY donation_date"; 
+
+// Additional reports
+$donationsByOrganizationQuery = "SELECT o.orgName, SUM(d.amount) AS total_donated 
+                                  FROM Donations d 
+                                  JOIN Charity c ON d.campId = c.id 
+                                  JOIN Organization o ON c.orgName = o.orgName 
+                                  GROUP BY o.orgName"; 
+
+$userActivityReportQuery = "SELECT username, COUNT(d.donId) as donation_count 
+                             FROM Donations d 
+                             GROUP BY username"; 
 
 // Execute queries
 $userCountResult = mysqli_query($con, $userCountQuery);
@@ -33,8 +44,10 @@ $charityCountResult = mysqli_query($con, $charityCountQuery);
 $donationTotalResult = mysqli_query($con, $donationTotalQuery);
 
 $topDonorsResult = mysqli_query($con, $topDonorsQuery);
-$donationsByOrganizationResult = mysqli_query($con, $donationsByOrganizationQuery);
+$donationsByCharityResult = mysqli_query($con, $donationsByCharityQuery);
 $donationsOverTimeResult = mysqli_query($con, $donationsOverTimeQuery);
+$donationsByOrganizationResult = mysqli_query($con, $donationsByOrganizationQuery);
+$userActivityReportResult = mysqli_query($con, $userActivityReportQuery);
 
 // Fetch data
 $userCount = mysqli_fetch_assoc($userCountResult)['count'];
@@ -47,14 +60,24 @@ while ($row = mysqli_fetch_assoc($topDonorsResult)) {
     $topDonors[] = $row;
 }
 
-$donationsByOrganization = [];
-while ($row = mysqli_fetch_assoc($donationsByOrganizationResult)) {
-    $donationsByOrganization[] = $row;
+$donationsByCharity = [];
+while ($row = mysqli_fetch_assoc($donationsByCharityResult)) {
+    $donationsByCharity[] = $row;
 }
 
 $donationsOverTime = [];
 while ($row = mysqli_fetch_assoc($donationsOverTimeResult)) {
     $donationsOverTime[] = $row;
+}
+
+$donationsByOrganization = [];
+while ($row = mysqli_fetch_assoc($donationsByOrganizationResult)) {
+    $donationsByOrganization[] = $row;
+}
+
+$userActivityReport = [];
+while ($row = mysqli_fetch_assoc($userActivityReportResult)) {
+    $userActivityReport[] = $row;
 }
 ?>
 
@@ -116,6 +139,19 @@ while ($row = mysqli_fetch_assoc($donationsOverTimeResult)) {
                         <canvas id="topDonorsChart" width="400" height="200"></canvas>
                     </div>
 
+                    <!-- Donations by Charity Chart -->
+                    <div class="bg-white shadow-md rounded-lg p-4">
+                        <h4 class="font-semibold mb-2">Donations by Charity</h4>
+                        <canvas id="donationsByCharityChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white shadow-md rounded-lg p-4 mt-6">
+                    <h4 class="font-semibold mb-2">Donations Over Time</h4>
+                    <canvas id="donationsOverTimeChart" width="400" height="200"></canvas>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                     <!-- Donations by Organization Chart -->
                     <div class="bg-white shadow-md rounded-lg p-4">
                         <h4 class="font-semibold mb-2">Donations by Organization</h4>
@@ -124,8 +160,23 @@ while ($row = mysqli_fetch_assoc($donationsOverTimeResult)) {
                 </div>
 
                 <div class="bg-white shadow-md rounded-lg p-4 mt-6">
-                    <h4 class="font-semibold mb-2">Donations Over Time</h4>
-                    <canvas id="donationsOverTimeChart" width="400" height="200"></canvas>
+                    <h4 class="font-semibold mb-2">User Activity Report</h4>
+                    <table class="min-w-full border-collapse border border-gray-300">
+                        <thead>
+                            <tr>
+                                <th class="border border-gray-300 px-4 py-2">Username</th>
+                                <th class="border border-gray-300 px-4 py-2">Donation Count</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($userActivityReport as $activity): ?>
+                                <tr>
+                                    <td class="border border-gray-300 px-4 py-2"><?php echo htmlspecialchars($activity['username']); ?></td>
+                                    <td class="border border-gray-300 px-4 py-2"><?php echo htmlspecialchars($activity['donation_count']); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                 </div>
             </main>
         </div>
@@ -140,18 +191,23 @@ while ($row = mysqli_fetch_assoc($donationsOverTimeResult)) {
 
         // Top Donors data
         const topDonors = <?php echo json_encode($topDonors); ?>;
-        const topDonorLabels = topDonors.map(donor => donor.userId); // Assuming userId is the label
+        const topDonorLabels = topDonors.map(donor => donor.username);
         const topDonorValues = topDonors.map(donor => donor.total_donated);
 
-        // Donations by Organization data
-        const donationsByOrganization = <?php echo json_encode($donationsByOrganization); ?>;
-        const organizationLabels = donationsByOrganization.map(org => org.organization_name);
-        const organizationValues = donationsByOrganization.map(org => org.total_donated);
+        // Donations by Charity data
+        const donationsByCharity = <?php echo json_encode($donationsByCharity); ?>;
+        const charityLabels = donationsByCharity.map(charity => charity.charity_title);
+        const charityValues = donationsByCharity.map(charity => charity.total_donated);
 
         // Donations Over Time data
         const donationsOverTime = <?php echo json_encode($donationsOverTime); ?>;
         const timeLabels = donationsOverTime.map(donation => donation.donation_date);
         const timeValues = donationsOverTime.map(donation => donation.total_donated);
+
+        // Donations by Organization data
+        const donationsByOrganization = <?php echo json_encode($donationsByOrganization); ?>;
+        const organizationLabels = donationsByOrganization.map(org => org.orgName);
+        const organizationValues = donationsByOrganization.map(org => org.total_donated);
 
         // Chart configurations
         const ctxUsers = document.getElementById('usersChart').getContext('2d');
@@ -159,8 +215,9 @@ while ($row = mysqli_fetch_assoc($donationsOverTimeResult)) {
         const ctxCharities = document.getElementById('charitiesChart').getContext('2d');
         const ctxDonations = document.getElementById('donationsChart').getContext('2d');
         const ctxTopDonors = document.getElementById('topDonorsChart').getContext('2d');
-        const ctxDonationsByOrganization = document.getElementById('donationsByOrganizationChart').getContext('2d');
+        const ctxDonationsByCharity = document.getElementById('donationsByCharityChart').getContext('2d');
         const ctxDonationsOverTime = document.getElementById('donationsOverTimeChart').getContext('2d');
+        const ctxDonationsByOrganization = document.getElementById('donationsByOrganizationChart').getContext('2d');
 
         // Users Chart
         new Chart(ctxUsers, {
@@ -257,14 +314,14 @@ while ($row = mysqli_fetch_assoc($donationsOverTimeResult)) {
             }
         });
 
-        // Donations by Organization Chart
-        new Chart(ctxDonationsByOrganization, {
+        // Donations by Charity Chart
+        new Chart(ctxDonationsByCharity, {
             type: 'bar',
             data: {
-                labels: organizationLabels,
+                labels: charityLabels,
                 datasets: [{
-                    label: 'Donations by Organization',
-                    data: organizationValues,
+                    label: 'Donations by Charity',
+                    data: charityValues,
                     backgroundColor: 'rgba(255, 99, 132, 0.6)',
                 }]
             },
@@ -297,6 +354,27 @@ while ($row = mysqli_fetch_assoc($donationsOverTimeResult)) {
                 }
             }
         });
+
+        // Donations by Organization Chart
+        new Chart(ctxDonationsByOrganization, {
+            type: 'bar',
+            data: {
+                labels: organizationLabels,
+                datasets: [{
+                    label: 'Donations by Organization',
+                    data: organizationValues,
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
     </script>
 
 </body>
